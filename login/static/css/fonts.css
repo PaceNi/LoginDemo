@@ -1,0 +1,59 @@
+@charset "utf-8";
+@font-face {
+	font-family: 'icomoon';
+	src:  url('../fonts/icomoon.eot?1f1cm0');
+	src:  url('../fonts/icomoon.eot?1f1cm0#iefix') format('embedded-opentype'),
+	url('../fonts/icomoon.ttf?1f1cm0') format('truetype'),
+	url('../fonts/icomoon.woff?1f1cm0') format('woff'),
+	url('../fonts/icomoon.svg?1f1cm0#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+	font-family: 'icomoon' !important;
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-icon_profile_female:before {
+  content: "\e900";
+}
+.icon-icon_profile_male:before {
+  content: "\e901";
+}
+.icon-tc_btn_cancle:before {
+  content: "\e902";
+  color: #fff;
+}
+.icon-yk_btn_arrow:before {
+  content: "\e903";
+}
+.icon-yk_btn_clear:before {
+  content: "\e904";
+}
+.icon-yk_icon_kechng:before {
+  content: "\e905";
+}
+.icon-yk_icon_locates:before {
+  content: "\e906";
+}
+.icon-yk_icon_select:before {
+  content: "\e907";
+}
+.icon-yk_icon_success:before {
+  content: "\e908";
+}
+.icon-yk_icon_warning:before {
+  content: "\e909";
+}
+.icon-yk_icon_xiaoxi:before {
+  content: "\e90a";
+}
