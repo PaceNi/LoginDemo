@@ -1,15 +1,14 @@
 <template>
   <section>
-    <!-- <div class="popBg than"></div> -->
     <div class="loginMain ">
       <div class="loginTitle">登陆/注册</div>
       <ul>
         <li class="first">
-          <input class="input" type="number" name="phone" v-model="phoneVal"  @keyup.enter="getCodeF()" placeholder="请输入手机号" />
+          <input class="input" type="number" name="phone" v-model="phoneVal" maxlength="11"  @keyup.enter="getCodeF()" placeholder="请输入手机号" />
           <button class="getCode" @click="getCodeF()" :class="{active:rightPhone,hide:beginCount || reSend || sending}">获取验证码</button>
           <button class="getCode" v-show="sending" @click="getPopMin('sending')">发送中...</button>
           <button class="getCode" v-show="beginCount" @click="getPopMin('counting')">已发送({{timeLeng}}s)</button>
-          <button class="getCode active" @click="getCodeF()" v-show="reSend">重新发送</button>
+          <button class="getCode active" @click="getCodeF()" v-show="reSend">重新获取</button>
           <span class="clearTel clear" v-show="hasPhone" @click="clearPhoneF()">
             <img src="../../static/img/cha.png" alt="" />
           </span>
@@ -27,23 +26,16 @@
         </li>
       </ul>
     </div>
-    <div class="popMsg animated" :class="{'fadeInDown' : getCodeOK&&!out , 'hide' : !getCodeOK, 'fadeOutUp': out }">
-      <div class="normal clearfix">
-        <img class="left" src="../../static/img/timg.jpeg">
-        <span>信息</span>
-        <span class="right">现在</span>
-      </div>
-      <div class="msg">
-        <p>10690716159995199</p>
-        <p>【loginTest】您的验证码是{{ code }}，请于5分钟内正确输入</p>
-      </div>
-    </div>
+    <popMsg :getCodeOK="getCodeOK" :out="out" :code="code"></popMsg>
+    <popMin :popMin="popMin" :popOut="popOut" :popClass="popClass" :msg="msg"></popMin>
   </section>
 </template>
 
 <script>
 import _axios from 'axios'
-import popMin from '@/components/popMin.js'
+import popMsg from './popMsg'
+import popMin from './popMin.vue'
+
 export default {
   name: 'login',
   data () {
@@ -58,16 +50,18 @@ export default {
       rightCode: false,
       isgetCode: false,
       timeLeng: 60,
-      timeTxt: '',
       timeInt: null,
       reSend: false,
       beginCount: false,
       sending: false,
-      loginType: '',
-      isWeChat: true,
       code: '',
       getCodeOK: false,
-      out:false,
+      out: false,
+      logined: false,
+      popClass: '',
+      popMin: false,
+      popOut: false,
+      msg: '',
     }
   },
   created () {
@@ -75,30 +69,38 @@ export default {
   },
   components: {
     popMin,
+    popMsg,
   },
   methods: { 
     getCodeF: function() {
-      var _this = this
-      var _codeUrl = "/wechatecom/appserver/login/getRegCode.do?mobile=" + _this.phoneVal
-      if (_this.rightPhone){
+      // var _codeUrl = "" + this.phoneVal
+      if (this.rightPhone){
         this.sendfunc()  // 发送中
-        _axios.post(_codeUrl,function(obj){
-          if(obj.code == '200'){
-            _this.isgetCode = true
-            // _this.countDown()
-            _this.timefunc()//倒计时
+        // _axios.post(_codeUrl,function(obj){
+        //   if(obj.code == '200'){
+           
+        //   }
+        // })
+        // 用延迟模拟ajax请求
+        setTimeout(() => {
+          if(this.phoneVal=='18852956186' || this.phoneVal=='18521796320'){
+            this.timefunc()//倒计时
+            this.isgetCode = true
             this.getCodeOK = true;//获取验证码
-            setTimeout(function(){
-              _this.out = true;//去除验证码样式
-            },6000)
+            this.code='1234'
+            setTimeout(() => this.out = true,5000);//隐藏验证码样式
+          } else {
+            this.popMinShow("icon-sign","发送失败")
+            // 发送失败后重置
+            this.sending = false
+            this.reSend = true
           }
-        })
-      } else if (!_this.rightPhone){
+        },1000);//隐藏验证码样式
+      } else if (!this.rightPhone){
         if(this.hasPhone){
-          popMin.show("icon-sign","请填写正确的手机号")
+          this.popMinShow("icon-sign","请填写正确的手机号")
         } else {
-          popMin.show("icon-sign","请输入手机号")
-          
+          this.popMinShow("icon-sign","请输入手机号")
         }
       }
     },
@@ -109,23 +111,21 @@ export default {
       this.codeVal = ''
     },
     countDown: function(){  //倒计时函数
-      var _this = this
       console.log("开始倒计时")
-      if (_this.rightPhone) {
-        _this.timeLeng--
-        if (_this.timeLeng <= 0) {
-          _this.clearCountF()
+      if (this.rightPhone) {
+        this.timeLeng--
+        if (this.timeLeng <= 0) {
+          this.clearCountF()
         }
       }
     },
     clearCountF: function(){
-      var _this = this
-      if (_this.timeInt) {
-        clearInterval(_this.timeInt)
-        _this.timeLeng = 60
-        _this.timeInt = null
-        _this.beginCount = false
-        _this.reSend = true
+      if (this.timeInt) {
+        clearInterval(this.timeInt)
+        this.timeLeng = 60
+        this.timeInt = null
+        this.beginCount = false
+        this.reSend = true
       }
     },
     sendfunc: function(){
@@ -140,17 +140,40 @@ export default {
     },
     getPopMin: function(str) {
       if ( str==='sending' ) {
-        popMin.show("icon-sign","发送中，请稍候")
+        this.popMinShow("icon-sign","发送中，请稍候")
       } else if ( str==='counting' ) {
-        popMin.show("icon-sign","60s后重新获取")
+        this.popMinShow("icon-sign","60s后重新获取")
       }
     },
+    loginFun: function() {
+      if(this.rightCode && this.rightCode && !this.logined){
+        this.logined = true
+        this.loginTxt = '登录中...'
+        // 模拟登录成功
+        setTimeout(() => this.loginTxt = '登录',3000);
+      }
+    },
+    popMinShow: function(icon, msg){
+      this.popMin = true
+      this.popClass = icon
+      this.msg = msg
+      setTimeout(() => this.popOut = true ,2000);
+      setTimeout(() => {
+        this.popOut = false//2s后提示消失
+        this.popMin = false
+        this.popClass = ''
+        this.msg = ''
+      },3000);
+    }
   },
   watch:{
     phoneVal: function(){
       let phonTest = (/^1[34578]\d{9}$/.test(this.phoneVal));
-      if (this.phoneVal.length > 0){
+      if (this.phoneVal.length > 0 && this.phoneVal.length < 12){
         this.hasPhone = true
+      } else if (this.phoneVal.length > 11){
+        this.phoneVal = this.phoneVal.slice(0,11)
+        this.hasPhone = false
       } else {
         this.hasPhone = false
       }
