@@ -143,7 +143,10 @@ export default {
         this.logined = true
         this.loginTxt = '登录中...'
         // 模拟登录成功
-        setTimeout(() => this.loginTxt = '登录',3000);
+        setTimeout(() => {
+          this.loginTxt = '登录'
+          this.$destroy(true)//登录成功后销毁组件
+          },3000);
       }
     },
     popMinShow: function(icon, msg){
@@ -188,6 +191,16 @@ export default {
         this.rightCode = false
       }
     }
+  },
+  detached () { 
+    //触发事件 myVue.$destroy(true),其中参数true控制是否删除DOM节点或者myVue.$remove()
+    //在 vm.$el 从 DOM 中删除时调用。必须是由指令或实例方法删除，直接操作 vm.$el 不会 触发这个钩子。
+    console.log("删除DOM成功");
+  },
+  destroyed () {
+    //触发方式,在console里面打myVue.$destroy();其中myVue.$destroy(true)是删除DOM节点,会触发detached函数,但是实例仍然存在
+    //在实例被销毁之后调用。此时所有的绑定和实例的指令已经解绑，注意是解绑不是销毁,所有的子实例也已经被销毁。
+    console.log("已销毁");
   },
 }
 </script>
