@@ -35,4 +35,6 @@ npm run build --report
 
 * *以上需要与后台交互的接口形式均采用延迟操作模拟*
 
+##  Github Pages
+* https://paceni.github.io/LoginDemo/dist/#/
 
