@@ -4,9 +4,9 @@
   </div>
 </template>
 <script type="text/javascript">
-    import '../static/css/page.css?ver=2017092'
-    import '../static/css/animate.min.css?ver=2017092'
-    import '../static/css/fonts.css?ver=2017092'
+    import '../static/css/page.css'
+    import '../static/css/animate.min.css'
+    import '../static/css/fonts.css'
 
     export default {
         data () {

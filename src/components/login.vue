@@ -82,7 +82,7 @@ export default {
             this.isgetCode = true
 
             // 模拟短信发送
-            this.code=Math.round(Math.random() * 10000)//
+            this.createCode()
             this.getCodeOK = true//已获取验证码，发送信息
             setTimeout(() => this.out = true,5000);//隐藏发送验证码样式
             setTimeout(() => {
@@ -106,6 +106,14 @@ export default {
           this.popMinShow("icon-sign","请输入手机号")
         }
       }
+    },
+    createCode: function() {
+      let code = "";    
+      let codeLength = 4;//验证码的长度
+      for(let i = 0; i < codeLength; i++) {//循环操作
+        code += Math.floor(Math.random()*10);//根据索引取得随机数加到code上
+      }
+      this.code = code
     },
     clearPhoneF: function(){
       this.phoneVal = ''
@@ -158,7 +166,7 @@ export default {
           this.loginTxt = '登录'
           this.loginMain = false//登录成功后
         },3000);
-        
+
       }
     },
     popMinShow: function(icon, msg){
