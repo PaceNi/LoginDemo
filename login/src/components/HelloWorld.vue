@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import _axios from 'axios'
 import popMsg from './popMsg'
 import popMin from './popMin.vue'
 
@@ -73,14 +72,8 @@ export default {
   },
   methods: { 
     getCodeF: function() {
-      // var _codeUrl = "" + this.phoneVal
       if (this.rightPhone){
         this.sendfunc()  // 发送中
-        // _axios.post(_codeUrl,function(obj){
-        //   if(obj.code == '200'){
-           
-        //   }
-        // })
         // 用延迟模拟ajax请求
         setTimeout(() => {
           if(this.phoneVal=='18852956186' || this.phoneVal=='18521796320'){
