@@ -1,5 +1,5 @@
 <template>
-	<div class="popMsg animated" :class="{'fadeInDown' : getCodeOK&&!out , 'hide' : !getCodeOK, 'fadeOutUp': out }">
+	<div class="popMsg animated2" :class="{'fadeInDown' : getCodeOK&&!out , 'hide' : !getCodeOK, 'fadeOutUp': out }">
     <div class="normal clearfix">
       <img class="left" src="../../static/img/timg.jpeg">
       <span>信息</span>

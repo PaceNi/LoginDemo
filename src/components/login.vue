@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="loginMain ">
+    <div class="loginMain " v-if="loginMain">
       <div class="loginTitle">登陆/注册</div>
       <ul>
         <li class="first">
@@ -61,27 +61,35 @@ export default {
       popMin: false,
       popOut: false,
       msg: '',
+      loginMain: true,
     }
-  },
-  created () {
-
   },
   components: {
     popMin,
     popMsg,
   },
   methods: { 
+    // 获取验证码
     getCodeF: function() {
       if (this.rightPhone){
         this.sendfunc()  // 发送中
+
+
         // 用延迟模拟ajax请求
         setTimeout(() => {
           if(this.phoneVal=='18852956186' || this.phoneVal=='18521796320'){
             this.timefunc()//倒计时
             this.isgetCode = true
-            this.getCodeOK = true;//获取验证码
-            this.code='1234'
-            setTimeout(() => this.out = true,5000);//隐藏验证码样式
+
+            // 模拟短信发送
+            this.code=Math.round(Math.random() * 10000)//
+            this.getCodeOK = true//已获取验证码，发送信息
+            setTimeout(() => this.out = true,5000);//隐藏发送验证码样式
+            setTimeout(() => {
+              this.getCodeOK = false
+              this.out = false
+            },6000);//恢复验证码初始样式
+
           } else {
             this.popMinShow("icon-sign","发送失败")
             // 发送失败后重置
@@ -89,6 +97,8 @@ export default {
             this.reSend = true
           }
         },1000);//隐藏验证码样式
+
+
       } else if (!this.rightPhone){
         if(this.hasPhone){
           this.popMinShow("icon-sign","请填写正确的手机号")
@@ -142,11 +152,13 @@ export default {
       if(this.rightCode && this.rightCode && !this.logined){
         this.logined = true
         this.loginTxt = '登录中...'
+
         // 模拟登录成功
         setTimeout(() => {
           this.loginTxt = '登录'
-          this.$destroy(true)//登录成功后销毁组件
-          },3000);
+          this.loginMain = false//登录成功后
+        },3000);
+        
       }
     },
     popMinShow: function(icon, msg){
@@ -191,16 +203,6 @@ export default {
         this.rightCode = false
       }
     }
-  },
-  detached () { 
-    //触发事件 myVue.$destroy(true),其中参数true控制是否删除DOM节点或者myVue.$remove()
-    //在 vm.$el 从 DOM 中删除时调用。必须是由指令或实例方法删除，直接操作 vm.$el 不会 触发这个钩子。
-    console.log("删除DOM成功");
-  },
-  destroyed () {
-    //触发方式,在console里面打myVue.$destroy();其中myVue.$destroy(true)是删除DOM节点,会触发detached函数,但是实例仍然存在
-    //在实例被销毁之后调用。此时所有的绑定和实例的指令已经解绑，注意是解绑不是销毁,所有的子实例也已经被销毁。
-    console.log("已销毁");
   },
 }
 </script>
