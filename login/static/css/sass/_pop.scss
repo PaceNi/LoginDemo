@@ -16,7 +16,7 @@
     }
 }
 
-//登陆注册弹框
+//登陆注册弹框\
 .loginMain{ height:326px; width:cal(270,375); padding:40px 10px;  border-radius:4px; overflow: hidden;  background-color:#fff; left:0; right:0;  top:0; bottom:0; z-index:1010!important; position:fixed; margin:auto;
     .loginTitle{ text-align: center; margin-top:40px;
         img{ width:53.3%;}
@@ -44,6 +44,15 @@
     }
     @include screen(320px) { padding:5px 10px;
         ul{ padding:0 5px;}
+    }
+}
+
+.popMsg{z-index: 1010!important; margin: 10px; border-radius: 20px; box-shadow: 0px 0px 45px #eee; padding: 10px; font-size: 12px;
+    .normal .left{float: left; width: 6%; vertical-align: middle; margin-right: 10px;}
+    .normal .right{float: right;}
+    .msg{ clear: both; padding-top: 7px;
+        p{ line-height: 14px;}
+        >p{font-weight: bolder;}
     }
 }
 

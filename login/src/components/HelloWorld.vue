@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="popBg than"></div>
+    <!-- <div class="popBg than"></div> -->
     <div class="loginMain ">
       <div class="loginTitle">登陆/注册</div>
       <ul>
@@ -26,6 +26,17 @@
           </div>
         </li>
       </ul>
+    </div>
+    <div class="popMsg animated" :class="{'fadeInDown' : getCodeOK&&!out , 'hide' : !getCodeOK, 'fadeOutUp': out }">
+      <div class="normal clearfix">
+        <img class="left" src="../../static/img/timg.jpeg">
+        <span>信息</span>
+        <span class="right">现在</span>
+      </div>
+      <div class="msg">
+        <p>10690716159995199</p>
+        <p>【loginTest】您的验证码是{{ code }}，请于5分钟内正确输入</p>
+      </div>
     </div>
   </section>
 </template>
@@ -54,33 +65,40 @@ export default {
       sending: false,
       loginType: '',
       isWeChat: true,
+      code: '',
+      getCodeOK: false,
+      out:false,
     }
   },
   created () {
 
   },
-  components: {},
+  components: {
+    popMin,
+  },
   methods: { 
     getCodeF: function() {
       var _this = this
-      var _codeUrl = "./getCode.json"
+      var _codeUrl = "/wechatecom/appserver/login/getRegCode.do?mobile=" + _this.phoneVal
       if (_this.rightPhone){
         this.sendfunc()  // 发送中
-        setTimeout(function(){
-          _this.timefunc()
-        },1000)
         _axios.post(_codeUrl,function(obj){
-          // if(obj.code == '200'){
-          //   _this.isgetCode = true
-          //   _this.countDown()
-          // }
-          console.log(obj)
+          if(obj.code == '200'){
+            _this.isgetCode = true
+            // _this.countDown()
+            _this.timefunc()//倒计时
+            this.getCodeOK = true;//获取验证码
+            setTimeout(function(){
+              _this.out = true;//去除验证码样式
+            },6000)
+          }
         })
       } else if (!_this.rightPhone){
         if(this.hasPhone){
           popMin.show("icon-sign","请填写正确的手机号")
         } else {
           popMin.show("icon-sign","请输入手机号")
+          
         }
       }
     },
@@ -112,9 +130,7 @@ export default {
     },
     sendfunc: function(){
       this.sending = true
-      // this.beginCount = true
       this.reSend = false
-      // this.timeInt = setInterval(this.countDown,1000)
     },
     timefunc: function(){
       this.sending = false
@@ -128,7 +144,7 @@ export default {
       } else if ( str==='counting' ) {
         popMin.show("icon-sign","60s后重新获取")
       }
-    }
+    },
   },
   watch:{
     phoneVal: function(){
@@ -138,13 +154,11 @@ export default {
       } else {
         this.hasPhone = false
       }
-
       if (phonTest) {
         this.rightPhone = true
       } else {
         this.rightPhone = false
       }
-
     },
     codeVal: function() {
       if (this.codeVal.length > 0){
@@ -152,7 +166,6 @@ export default {
       } else {
         this.hasCode = false
       }
-
       if (this.codeVal.length == 4 && this.isgetCode) {
         this.rightCode = true
       } else {

@@ -26,7 +26,6 @@ class popMin{
         setTimeout(() => {
             this.delete();
         },1000);
-        
     }
     delete(){
         let elements = document.querySelectorAll('.popMin');
