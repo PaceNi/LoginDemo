@@ -10,13 +10,13 @@
           <button class="getCode" v-show="beginCount" @click="getPopMin('counting')">已发送({{timeLeng}}s)</button>
           <button class="getCode active" @click="getCodeF()" v-show="reSend">重新获取</button>
           <span class="clearTel clear" v-show="hasPhone" @click="clearPhoneF()">
-            <img src="../../static/img/cha.png" alt="" />
+            <img src="../../static/img/cha.jpg" alt="" />
           </span>
         </li>
         <li class="second">
           <input class="input" type="number" name="code" v-model="codeVal"  @keyup.enter="loginFun()"  placeholder="请输入验证码" />
           <span class="clearCode clear" @click="clearCodeF()" v-show="hasCode">
-            <img src="../../static/img/cha.png" alt="" />
+            <img src="../../static/img/cha.jpg" alt="" />
           </span>
         </li>
         <li class="third">
