@@ -62,6 +62,7 @@ export default {
       popOut: false,
       msg: '',
       loginMain: true,
+      flag: 1,
     }
   },
   components: {
@@ -170,16 +171,20 @@ export default {
       }
     },
     popMinShow: function(icon, msg){
-      this.popMin = true
-      this.popClass = icon
-      this.msg = msg
-      setTimeout(() => this.popOut = true ,2000);
-      setTimeout(() => {
-        this.popOut = false//2s后提示消失
-        this.popMin = false
-        this.popClass = ''
-        this.msg = ''
-      },3000);
+      if(this.flag){
+        this.flag = 0
+        this.popMin = true
+        this.popClass = icon
+        this.msg = msg
+        setTimeout(() => this.popOut = true ,2000);
+        setTimeout(() => {
+          this.popOut = false//2s后提示消失
+          this.popMin = false
+          this.popClass = ''
+          this.msg = ''
+          this.flag = 1
+        },3000);
+      }
     }
   },
   watch:{
