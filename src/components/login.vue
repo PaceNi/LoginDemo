@@ -57,7 +57,7 @@ export default {
       getCodeOK: false,
       out: false,
       logined: false,
-      popClass: '',
+      popClass: 'icon-sign',
       popMin: false,
       popOut: false,
       msg: '',
