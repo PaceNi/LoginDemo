@@ -16,6 +16,10 @@ npm run build
 
 # build for production and view the bundle analyzer report
 npm run build --report
+
+# build for test
+npm run unit
+
 ```
 
 ## 测试用例

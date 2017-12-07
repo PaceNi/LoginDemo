@@ -6,10 +6,10 @@
         <li class="first">
           <input class="input" type="number" name="phone" v-model="phoneVal" maxlength="11"  @keyup.enter="getCodeF()" placeholder="请输入手机号" />
           <button class="getCode" @click="getCodeF()" :class="{active:rightPhone,hide:beginCount || reSend || sending}">获取验证码</button>
-          <button class="getCode" v-show="sending">发送中...</button>
-          <button class="getCode" v-show="beginCount" @click="getPopMin()">已发送({{timeLeng}}s)</button>
-          <button class="getCode active" @click="getCodeF()" v-show="reSend">重新获取</button>
-          <span class="clearTel clear" v-show="hasPhone" @click="clearPhoneF()">
+          <button class="getCode status" v-if="sending">发送中...</button>
+          <button class="getCode status" v-if="beginCount" @click="getPopMin()">已发送({{timeLeng}}s)</button>
+          <button class="getCode active status" @click="getCodeF()" v-if="reSend">重新获取</button>
+          <span class="clearTel clear" v-if="hasPhone" @click="clearPhoneF()">
             <img src="../../static/img/cha.jpg" alt="" />
           </span>
         </li>
@@ -26,15 +26,25 @@
         </li>
       </ul>
     </div>
-    <popMsg :getCodeOK="getCodeOK" :out="out" :code="code"></popMsg>
-    <popMin :popMin="popMin" :popOut="popOut" :popClass="popClass" :msg="msg"></popMin>
+    <div class="popMin animated" :class="{'fadeIn' : popMin&&!popOut , 'hide' : !popMin, 'fadeOut': popOut }">
+      <span class="icon_imp" :class="popClass"></span>
+      <p class="txt">{{ msg }}</p>
+    </div>
+    <div class="popMsg animated2" :class="{'fadeInDown' : getCodeOK&&!out , 'hide' : !getCodeOK, 'fadeOutUp': out }">
+      <div class="normal clearfix">
+        <img class="left" src="../../static/img/timg.jpeg">
+        <span>信息</span>
+        <span class="right">现在</span>
+      </div>
+      <div class="msg">
+        <p>10690716159995199</p>
+        <p>【loginTest】您的验证码是{{ code }}，请于5分钟内正确输入</p>
+      </div>
+    </div>
   </section>
 </template>
 
 <script>
-import popMsg from './popMsg'
-import popMin from './popMin.vue'
-
 export default {
   name: 'login',
   data () {
@@ -66,12 +76,13 @@ export default {
     }
   },
   components: {
-    popMin,
-    popMsg,
+  },
+  created() {
   },
   methods: { 
     // 获取验证码
     getCodeF: function() {
+      this.checkPhone()
       if (this.rightPhone){
         if(this.flag){
           this.sendfunc()  // 发送中
@@ -81,7 +92,7 @@ export default {
             if(this.phoneVal=='18852956186' || this.phoneVal=='18521796320'){
               this.timefunc()//倒计时
               this.isgetCode = true
-
+              console.log('开始倒计时')
               // 模拟短信发送
               this.createCode()
               this.getCodeOK = true//已获取验证码，发送信息
@@ -94,6 +105,7 @@ export default {
             } else {
               this.popMinShow("icon-sign","发送失败")
               // 发送失败后重置
+              console.log('发送失败')
               this.sending = false
               this.reSend = true
             }
@@ -103,7 +115,7 @@ export default {
       } else if (!this.rightPhone){
         if(this.hasPhone){
           this.popMinShow("icon-sign","请填写正确的手机号")
-        } else {
+        } else if(!this.hasPhone){
           this.popMinShow("icon-sign","请输入手机号")
         }
       }
@@ -123,7 +135,7 @@ export default {
       this.codeVal = ''
     },
     countDown: function(){  //倒计时函数
-      console.log("开始倒计时")
+      // console.log("开始倒计时")
       if (this.rightPhone) {
         this.timeLeng--
         if (this.timeLeng <= 0) {
@@ -180,6 +192,19 @@ export default {
           this.msg = ''
           this.flag = 1
         },3000);
+      }
+    },
+    checkPhone: function() {
+      let phonTest = (/^1[34578]\d{9}$/.test(this.phoneVal));
+      if (this.phoneVal.length > 0){
+        this.hasPhone = true
+      } else {
+        this.hasPhone = false
+      }
+      if (phonTest) {
+        this.rightPhone = true
+      } else {
+        this.rightPhone = false
       }
     }
   },
