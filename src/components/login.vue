@@ -6,8 +6,8 @@
         <li class="first">
           <input class="input" type="number" name="phone" v-model="phoneVal" maxlength="11"  @keyup.enter="getCodeF()" placeholder="请输入手机号" />
           <button class="getCode" @click="getCodeF()" :class="{active:rightPhone,hide:beginCount || reSend || sending}">获取验证码</button>
-          <button class="getCode" v-show="sending" @click="getPopMin('sending')">发送中...</button>
-          <button class="getCode" v-show="beginCount" @click="getPopMin('counting')">已发送({{timeLeng}}s)</button>
+          <button class="getCode" v-show="sending">发送中...</button>
+          <button class="getCode" v-show="beginCount" @click="getPopMin()">已发送({{timeLeng}}s)</button>
           <button class="getCode active" @click="getCodeF()" v-show="reSend">重新获取</button>
           <span class="clearTel clear" v-show="hasPhone" @click="clearPhoneF()">
             <img src="../../static/img/cha.jpg" alt="" />
@@ -73,32 +73,32 @@ export default {
     // 获取验证码
     getCodeF: function() {
       if (this.rightPhone){
-        this.sendfunc()  // 发送中
+        if(this.flag){
+          this.sendfunc()  // 发送中
 
+          // 用延迟模拟ajax请求
+          setTimeout(() => {
+            if(this.phoneVal=='18852956186' || this.phoneVal=='18521796320'){
+              this.timefunc()//倒计时
+              this.isgetCode = true
 
-        // 用延迟模拟ajax请求
-        setTimeout(() => {
-          if(this.phoneVal=='18852956186' || this.phoneVal=='18521796320'){
-            this.timefunc()//倒计时
-            this.isgetCode = true
+              // 模拟短信发送
+              this.createCode()
+              this.getCodeOK = true//已获取验证码，发送信息
+              setTimeout(() => this.out = true,5000);//隐藏发送验证码样式
+              setTimeout(() => {
+                this.getCodeOK = false
+                this.out = false
+              },6000);//恢复验证码初始样式
 
-            // 模拟短信发送
-            this.createCode()
-            this.getCodeOK = true//已获取验证码，发送信息
-            setTimeout(() => this.out = true,5000);//隐藏发送验证码样式
-            setTimeout(() => {
-              this.getCodeOK = false
-              this.out = false
-            },6000);//恢复验证码初始样式
-
-          } else {
-            this.popMinShow("icon-sign","发送失败")
-            // 发送失败后重置
-            this.sending = false
-            this.reSend = true
-          }
-        },1000);//隐藏验证码样式
-
+            } else {
+              this.popMinShow("icon-sign","发送失败")
+              // 发送失败后重置
+              this.sending = false
+              this.reSend = true
+            }
+          },1000);//隐藏验证码样式
+        }
 
       } else if (!this.rightPhone){
         if(this.hasPhone){
@@ -151,11 +151,7 @@ export default {
       this.timeInt = setInterval(this.countDown,1000)
     },
     getPopMin: function(str) {
-      if ( str==='sending' ) {
-        this.popMinShow("icon-sign","发送中，请稍候")
-      } else if ( str==='counting' ) {
-        this.popMinShow("icon-sign","60s后重新获取")
-      }
+      this.popMinShow("icon-sign","60s后重新获取")
     },
     loginFun: function() {
       if(this.rightCode && this.rightCode && !this.logined){
@@ -165,7 +161,7 @@ export default {
         // 模拟登录成功
         setTimeout(() => {
           this.loginTxt = '登录'
-          this.loginMain = false//登录成功后
+          this.loginMain = false//登录成功后移除组件
         },3000);
 
       }
