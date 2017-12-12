@@ -37,7 +37,6 @@ npm run unit
 
 * 获取验证码成功并且输入四位验证码，登录按钮点亮可进行登录操作
 
-* *以上需要与后台交互的接口形式均采用延迟操作模拟*
 
 ##  Github Pages
 * https://paceni.github.io/LoginDemo/dist/#/
