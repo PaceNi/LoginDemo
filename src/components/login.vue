@@ -78,6 +78,7 @@ export default {
   components: {
   },
   created() {
+
   },
   methods: { 
     // 获取验证码
@@ -86,30 +87,31 @@ export default {
       if (this.rightPhone){
         if(this.flag){
           this.sendfunc()  // 发送中
-
-          // 用延迟模拟ajax请求
-          setTimeout(() => {
-            if(this.phoneVal=='18852956186' || this.phoneVal=='18521796320'){
-              this.timefunc()//倒计时
-              this.isgetCode = true
-              console.log('开始倒计时')
-              // 模拟短信发送
+          const promise = new Promise((resolve, reject)=> {
+            if (this.phoneVal=='18852956186' || this.phoneVal=='18521796320'){
               this.createCode()
-              this.getCodeOK = true//已获取验证码，发送信息
-              setTimeout(() => this.out = true,5000);//隐藏发送验证码样式
-              setTimeout(() => {
-                this.getCodeOK = false
-                this.out = false
-              },6000);//恢复验证码初始样式
-
+              resolve(this.code);
             } else {
-              this.popMinShow("icon-sign","发送失败")
-              // 发送失败后重置
-              console.log('发送失败')
-              this.sending = false
-              this.reSend = true
+              reject('error');
             }
-          },1000);//隐藏验证码样式
+          });
+          promise.then((value)=> {
+            this.timefunc()//倒计时
+            this.isgetCode = true
+            console.log('开始倒计时')
+            this.getCodeOK = true//已获取验证码，发送信息
+            setTimeout(() => this.out = true,5000);//隐藏发送验证码样式
+            setTimeout(() => {
+              this.getCodeOK = false
+              this.out = false
+            },6000);//恢复验证码初始样式
+          },(error)=> {
+            this.popMinShow("icon-sign","发送失败")
+            // 发送失败后重置
+            console.log('发送失败')
+            this.sending = false
+            this.reSend = true
+          });
         }
 
       } else if (!this.rightPhone){
