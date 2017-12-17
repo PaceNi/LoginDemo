@@ -92,25 +92,29 @@ export default {
               this.createCode()
               resolve(this.code);
             } else {
-              reject('error');
+              resolve('error');
             }
           });
-          promise.then((value)=> {
-            this.timefunc()//倒计时
-            this.isgetCode = true
-            console.log('开始倒计时')
-            this.getCodeOK = true//已获取验证码，发送信息
-            setTimeout(() => this.out = true,5000);//隐藏发送验证码样式
-            setTimeout(() => {
-              this.getCodeOK = false
-              this.out = false
-            },6000);//恢复验证码初始样式
-          },(error)=> {
-            this.popMinShow("icon-sign","发送失败")
-            // 发送失败后重置
-            console.log('发送失败')
-            this.sending = false
-            this.reSend = true
+          promise.then( data => { //cb
+            if(data!=='error'){
+              this.timefunc()//倒计时
+              this.isgetCode = true
+              console.log('开始倒计时')
+              this.getCodeOK = true//已获取验证码，发送信息
+              setTimeout(() => this.out = true,5000);//隐藏发送验证码样式
+              setTimeout(() => {
+                this.getCodeOK = false
+                this.out = false
+              },6000);//恢复验证码初始样式
+            }else{
+              this.popMinShow("icon-sign","发送失败")
+              // 发送失败后重置
+              console.log('发送失败')
+              this.sending = false
+              this.reSend = true
+            }
+          })
+          .catch( err => {
           });
         }
 
