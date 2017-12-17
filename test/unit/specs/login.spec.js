@@ -38,17 +38,8 @@ describe('login.vue', () => {
 		const status = vm.$el.querySelector('.status');
 		expect(status.textContent).toEqual('发送中...')
   })
-	// var originalTimeout;
- //  beforeEach(function() {
- //      originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
- //      jasmine.DEFAULT_TIMEOUT_INTERVAL = 11000;
- //  });
 
- //  afterEach(function() {
- //    jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
- //  });
-
-	it('输入‘18852956186’异步之后倒计时', done => {
+  it('输入‘18852956187’先返回发送中', () => {
   	const Constructor = Vue.extend(login)
 		const vm = new Constructor().$mount()
 		vm.phoneVal='18852956186'
@@ -56,26 +47,8 @@ describe('login.vue', () => {
 		const clickEvent = new window.Event('click');
 		button.dispatchEvent(clickEvent);
 		vm._watcher.run();
-		Vue.nextTick(() => {
-			const status = vm.$el.querySelector('.status');
-			expect(status.textContent).toMatch('已发送')
-			done()
-		})
+		const status = vm.$el.querySelector('.status');
+		expect(status.textContent).toEqual('发送中...')
   })
-  // 两者不能同时进行
-  // it('输入‘18852956187’重新获取', done => {
-  // 	const Constructor = Vue.extend(login)
-		// const vm = new Constructor().$mount()
-		// vm.phoneVal='18852956187'
-		// const button = vm.$el.querySelector('.getCode');
-		// const clickEvent = new window.Event('click');
-		// button.dispatchEvent(clickEvent);
-		// vm._watcher.run();
-		// Vue.nextTick(() => {
-		// 	const status = vm.$el.querySelector('.status');
-		// 	expect(status.textContent).toEqual('重新获取')
-		// 	done()
-		// })
-  // })
-  
-  })
+
+})
